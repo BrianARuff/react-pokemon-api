@@ -1,25 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import "./scss/App.scss";
 
 function App() {
+  const [pokemon, setPokemon] = React.useState({});
+  React.useEffect(() => {
+    fetch("https://pokeapi.co/api/v2/pokemon")
+      .then((res) => res.json())
+      .then((pokemon) => {
+        setPokemon(() => ({ ...pokemon.results }));
+      })
+      .catch((err) => console.error(err));
+  }, [pokemon]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {Object.keys(pokemon).map((key) => {
+        return <Pokemon key={key} pokemon={pokemon} pokemonKey={key} />;
+      })}
     </div>
+  );
+}
+
+function Pokemon(props: any) {
+  const [imgStr, setImgStr] = React.useState([]);
+  React.useEffect(() => {
+    fetch(
+      "https://pokeapi.co/api/v2/pokemon/" +
+        props.pokemon[props.pokemonKey].name
+    )
+      .then((r) => r.json())
+      .then((pm) => {
+        const copy = imgStr;
+        // @ts-ignore
+        copy.push(pm.sprites.front_default);
+        setImgStr(copy);
+      });
+  }, [imgStr]);
+  return (
+    <>
+      {imgStr.map((image) => {
+        return image ? (
+          <img key={Math.random() * 10000} src={image} alt="" />
+        ) : (
+          <p>No Image</p>
+        );
+      })}
+    </>
   );
 }
 
