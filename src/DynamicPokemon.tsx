@@ -1,14 +1,18 @@
-import { stringify } from "node:querystring";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import DynamicPokemonForms from "./DynamicPokemonForms";
 
+type PokemonType = {
+  name: string;
+  sprites: {
+    front_default: string;
+    back_default: string;
+  };
+  forms: [{ name: string; url: string }];
+};
+
 export default function DynamicPokemon(props: any) {
-  const [pokemon, setPokemon] = React.useState({
-    name: "",
-    sprites: { front_default: "", back_default: "" },
-    forms: [{ name: "", url: "" }],
-  });
+  const [pokemon, setPokemon] = React.useState<PokemonType | null>(null);
   React.useEffect(() => {
     fetch(props.url)
       .then((res) => res.json())
