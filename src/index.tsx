@@ -1,12 +1,31 @@
-import React from "react";
+import * as React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
+import DynamicPokemon from "./DynamicPokemon";
 import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import DynamicPokemonForms from "./DynamicPokemonForms";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          <App />
+        </Route>
+        <Route
+          exact
+          path="/pokemon/:name"
+          render={(props) => <DynamicPokemon {...props.location.state} />}
+        />
+        <Route
+          exact
+          path="/pokemon/forms/:name"
+          render={(props) => <DynamicPokemonForms {...props.location.state} />}
+        />
+      </Switch>
+    </Router>
   </React.StrictMode>,
   document.getElementById("root")
 );
